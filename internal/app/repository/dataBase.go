@@ -2,8 +2,7 @@ package dataBase
 
 import (
 	"database/sql"
-	"fmt"
-
+	"errors"
 	_ "modernc.org/sqlite"
 )
 
@@ -14,6 +13,8 @@ const UserTable = `
 	);
 	`
 const SQLInsert = `INSERT INTO User(login, password) VALUES (?, ?)`
+
+const SQLSelect = `SELECT password FROM User WHERE login = (?)`
 
 type DataBase struct {
 	db *sql.DB
@@ -37,13 +38,24 @@ func (myDB *DataBase) StartDB() error {
 	return nil
 }
 
-func (myDB *DataBase) InsertToDB(login string, password string) error {
+func (myDB *DataBase) InsertInDB(login string, password string) error {
 	_, err := myDB.db.Exec(SQLInsert, login, password)
 	if err != nil {
 		return err
 	}
-	fmt.Println(login, password)
 	return nil
+}
+
+func (myDB *DataBase) SearchInDB(login string) (string, error) {
+	var DBpass string
+	err := myDB.db.QueryRow(SQLSelect, login).Scan(&DBpass)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", errors.New("user not found")
+		}
+		return "", err
+	}
+	return DBpass, nil
 }
 
 func (myDB *DataBase) CloseDB() {

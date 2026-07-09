@@ -10,9 +10,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	defer myApp.Close()
 	err = myApp.Run()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }

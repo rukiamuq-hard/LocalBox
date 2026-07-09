@@ -29,10 +29,15 @@ func New() (*App, error) {
 	a.servc = service.New(a.db)
 	a.ePoint = endpoint.New(a.servc)
 	a.echo = echo.New()
+	a.echo.Static("/", "website")
 
-	a.echo.Use(middleWare.RoleCheck)
-	a.echo.GET("/", a.ePoint.LoadLoginReg)
-	a.echo.POST("/register", a.ePoint.Register)
+	a.echo.GET("/", a.ePoint.LoadMainHTML)
+	a.echo.POST("/register.html", a.ePoint.Register)
+	a.echo.POST("/login.html", a.ePoint.Login)
+	//upper is can be watching without login
+
+	//down is with cookie secure
+	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return nil }, middleWare.CheckLoggin)
 
 	return a, nil
 }
@@ -44,4 +49,11 @@ func (app *App) Run() error {
 	}
 
 	return nil
+}
+
+func (app *App) Close() {
+	if app.db != nil {
+		app.db.CloseDB()
+	}
+
 }

@@ -1,28 +1,24 @@
 package middleWare
 
 import (
-	"log"
-	"strings"
+	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo/v5"
 )
 
-const roleAdmin = "admin"
+const CookieName = "loggin_token"
 
-func RoleCheck(next echo.HandlerFunc) echo.HandlerFunc {
+func CheckLoggin(next echo.HandlerFunc) echo.HandlerFunc {
 
 	return func(ctx *echo.Context) error {
-		val := ctx.Request().Header.Get("User-Role")
-
-		if strings.EqualFold(val, roleAdmin) {
-			log.Println("Red button user detected")
-		}
-
-		err := next(ctx)
+		cookie, err := ctx.Cookie(CookieName)
 		if err != nil {
-			return err
+			return ctx.Redirect(http.StatusSeeOther, "/")
 		}
 
-		return nil
+		fmt.Println("Cookie: ", cookie)
+
+		return next(ctx)
 	}
 }
