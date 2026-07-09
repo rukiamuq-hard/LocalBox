@@ -1,10 +1,10 @@
 package app
 
 import (
-	"Umbrella/internal/app/endpoint"
-	middleWare "Umbrella/internal/app/mw"
-	"Umbrella/internal/app/repository"
-	"Umbrella/internal/app/service"
+	"Umbrella/internal/app/endpoint"          // EndPoint
+	middleWare "Umbrella/internal/app/mw"     // MiddleWare
+	"Umbrella/internal/app/repository/SQLite" // SQLITE
+	"Umbrella/internal/app/service"           // Service
 	"fmt"
 
 	"github.com/labstack/echo/v5"
