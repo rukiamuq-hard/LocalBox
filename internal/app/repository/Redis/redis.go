@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"time"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -25,7 +26,7 @@ func (myRDB *RedisDB) CreateRedis() {
 }
 
 func (myRDB *RedisDB) SetKeyValue(key string, value int) error {
-	err := myRDB.rdb.Set(context.Background(), key, value, 0).Err()
+	err := myRDB.rdb.Set(context.Background(), key, value, 20*time.Minute).Err()
 	if err != nil {
 		return err
 	}
