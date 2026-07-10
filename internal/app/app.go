@@ -1,33 +1,40 @@
 package app
 
 import (
-	"Umbrella/internal/app/endpoint"          // EndPoint
-	middleWare "Umbrella/internal/app/mw"     // MiddleWare
-	"Umbrella/internal/app/repository/SQLite" // SQLITE
-	"Umbrella/internal/app/service"           // Service
+	"Umbrella/internal/app/endpoint"             // EndPoint
+	middleWare "Umbrella/internal/app/mw"        // MiddleWare
+	rds "Umbrella/internal/app/repository/Redis" // Redis
+	"Umbrella/internal/app/repository/SQLite"    // SQLITE
+	"Umbrella/internal/app/service"              // Service
 	"fmt"
 
 	"github.com/labstack/echo/v5"
 )
 
 type App struct {
-	ePoint *endpoint.EndPoint
-	servc  *service.Service
-	echo   *echo.Echo
-	db     *dataBase.DataBase
+	ePoint  *endpoint.EndPoint
+	servc   *service.Service
+	echo    *echo.Echo
+	db      *dataBase.DataBase
+	rdb     *rds.RedisDB
+	midleWR *middleWare.MiddleWare
 }
 
 func New() (*App, error) {
 	a := &App{}
 
-	a.db = dataBase.New()
+	a.db = dataBase.New() // SQLITE START
 	err := a.db.StartDB()
 	if err != nil {
 		return nil, err
 	}
 
-	a.servc = service.New(a.db)
+	a.rdb = rds.New() // REDIS START
+	a.rdb.CreateRedis()
+
+	a.servc = service.New(a.db, a.rdb)
 	a.ePoint = endpoint.New(a.servc)
+	a.midleWR = middleWare.New(a.servc)
 	a.echo = echo.New()
 	a.echo.Static("/", "website")
 
@@ -37,7 +44,7 @@ func New() (*App, error) {
 	//upper is can be watching without login
 
 	//down is with cookie secure
-	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return nil }, middleWare.CheckLoggin)
+	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return nil }, a.midleWR.CheckLoggin)
 
 	return a, nil
 }
@@ -52,8 +59,9 @@ func (app *App) Run() error {
 }
 
 func (app *App) Close() {
-	if app.db != nil {
+	if app.db != nil && app.rdb != nil {
 		app.db.CloseDB()
+		app.rdb.Close()
 	}
 
 }

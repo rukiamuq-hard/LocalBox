@@ -3,16 +3,18 @@ package endpoint
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
+	"github.com/labstack/echo/v5"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/labstack/echo/v5"
 )
 
 type Service interface {
 	RegisterUser(login string, password string) error
 	LoginUser(login string, password string) error
+	GetIdFromDB(login string) (int, error)
+	RedisSetKeyValue(key string, value int) error
 }
 
 type EndPoint struct {
@@ -39,7 +41,7 @@ func (e *EndPoint) Register(ctx *echo.Context) error {
 	password := ctx.FormValue("password")
 
 	fmt.Println("User try to register: ", login)
-	if len(password) > 12 || len(password) < 4 {
+	if len(password) > 14 || len(password) < 4 {
 		fmt.Println("Password size more than 12 length")
 		return ctx.Redirect(http.StatusSeeOther, "/")
 	}
@@ -61,32 +63,38 @@ func (e *EndPoint) Login(ctx *echo.Context) error {
 	fmt.Println("User try to login: ", login)
 	fmt.Println("Password for Login: ", password)
 
-	if len(password) > 14 || len(password) < 4 {
-		fmt.Println("Wrong password length")
-		return ctx.Redirect(http.StatusSeeOther, "/")
-	}
-
+	fmt.Println("befora login")
 	err := e.s.LoginUser(login, password)
-	if strings.Contains(err.Error(), "user not found") {
+	fmt.Println("after login")
+	if err != nil {
+		if strings.Contains(err.Error(), "user not found") {
 
-		fmt.Println("Error, account alreade exist: ", err.Error())
-		return ctx.Redirect(http.StatusSeeOther, "/")
-
-	} else if err != nil {
-
+			fmt.Println("Error, account alreade exist: ", err.Error())
+			return ctx.Redirect(http.StatusSeeOther, "/")
+		}
 		fmt.Println("Error with login: ", err)
 		return ctx.Redirect(http.StatusSeeOther, "/")
 	}
 
+	fmt.Println("adding cookie")
+
 	cookie := new(http.Cookie)
 	cookie.Name = "loggin_token"
-	cookie.Value = login
+	cookie.Value = uuid.New().String()
 	cookie.Path = "/"
 
+	id, err := e.s.GetIdFromDB(login)
+	if err != nil {
+		return ctx.Redirect(http.StatusSeeOther, "/")
+	}
+	err = e.s.RedisSetKeyValue(cookie.Value, id)
+	if err != nil {
+		return ctx.Redirect(http.StatusSeeOther, "/")
+	}
 	cookie.Expires = time.Now().Add(20 * time.Minute)
 	cookie.HttpOnly = true
 
 	ctx.SetCookie(cookie)
 
-	return ctx.Redirect(http.StatusMovedPermanently, "/dashboard.html")
+	return ctx.Redirect(http.StatusSeeOther, "/dashboard.html")
 }
