@@ -1,7 +1,6 @@
 package middleWare
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
@@ -28,15 +27,10 @@ func (mw *MiddleWare) CheckLoggin(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil {
 			return ctx.Redirect(http.StatusSeeOther, "/")
 		}
-
-		fmt.Println("Cookie: ", cookie)
-
-		val, err := mw.service.RedisGetValue(cookie.Value)
+		_, err = mw.service.RedisGetValue(cookie.Value)
 		if err != nil {
 			return ctx.Redirect(http.StatusSeeOther, "/")
 		}
-		fmt.Println("id", val)
-
 		return next(ctx)
 	}
 }

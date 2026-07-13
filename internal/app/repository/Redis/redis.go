@@ -7,7 +7,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const passwordRedis = "mypass"
+const LifeTimeObject = 20
 
 type RedisDB struct {
 	rdb *redis.Client
@@ -19,14 +19,14 @@ func New() *RedisDB {
 
 func (myRDB *RedisDB) CreateRedis() {
 	myRDB.rdb = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6380",
+		Addr:     "127.0.0.1:6379",
 		Password: "",
 		DB:       0,
 	})
 }
 
 func (myRDB *RedisDB) SetKeyValue(key string, value int) error {
-	err := myRDB.rdb.Set(context.Background(), key, value, 20*time.Minute).Err()
+	err := myRDB.rdb.Set(context.Background(), key, value, LifeTimeObject*time.Minute).Err()
 	if err != nil {
 		return err
 	}

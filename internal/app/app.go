@@ -44,7 +44,10 @@ func New() (*App, error) {
 	//upper is can be watching without login
 
 	//down is with cookie secure
-	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return nil }, a.midleWR.CheckLoggin)
+	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return ctx.File("website/dashboard.html") }, a.midleWR.CheckLoggin)
+	a.echo.POST("/api/files", a.ePoint.UploadFile, a.midleWR.CheckLoggin)
+	a.echo.GET("/api/files", a.ePoint.GetFiles, a.midleWR.CheckLoggin)
+	a.echo.GET("/download/:id", a.ePoint.DownloadFile, a.midleWR.CheckLoggin)
 
 	return a, nil
 }

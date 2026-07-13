@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Cloud - Mini Manager</title>
+    <style>
+        body {
+            background-color: #00A3C4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            width: 100%;
+            max-width: 340px; 
+            padding: 15px;
+        }
+
+        .top-title {
+            margin-top: 0;        
+            margin-bottom: 20px;  
+            font-size: 20px;        
+            font-weight: bold;    
+            color: #DCDCDC;        
+            text-align: center;
+            width: 100%;
+            text-shadow: 
+                -1px -1px 0 #2F4F4F,  
+                1px -1px 0 #2F4F4F,
+                -1px  1px 0 #2F4F4F,  
+                1px  1px 0 #2F4F4F;
+        }      
+
+        .list-card {
+            background-color: #666666;
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;        
+            box-sizing: border-box; 
+            max-height: 70vh;       
+            overflow-y: auto;       
+            display: flex;
+           flex-direction: column;
+        }
+
+        .list-card h2 {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            color: black;
+            text-align: center;
+            text-shadow: 
+                -0.8px -0.8px 0 #a6a6a6,  
+                0.8px -0.8px 0 #a6a6a6,
+                -0.8px  0.8px 0 #a6a6a6,  
+                0.8px  0.8px 0 #a6a6a6;
+        }
+
+        .control-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .btn-action, .label-upload {
+            background-color: #00A3C4;
+            color: black;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            flex: 1;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .btn-action:hover, .label-upload:hover {
+            background-color: #00779E;
+        }
+
+        .btn-action:active, .label-upload:active {
+            transform: scale(0.97);
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        #path {
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #DCDCDC;
+            word-break: break-all;
+            background-color: #2F4F4F;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        #files {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .item {
+            width: 90px;
+            height: 90px;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            box-sizing: border-box;
+            word-break: break-word;
+            transition: transform 0.1s, border-color 0.3s;
+        }
+
+        .item:active {
+            transform: scale(0.95);
+        }
+
+        .folder {
+            border-color: #ffe680;
+            color: #b38f00;
+        }
+
+        .file {
+            border-color: #bde0ff;
+            color: #0066cc;
+        }
+
+        .over {
+            outline: 3px solid #00A3C4;
+        }
+
+        .list-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .list-card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .list-card::-webkit-scrollbar-thumb {
+            background-color: #00A3C4;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+    <h2 class="top-title">Welcome!</h2>
+
+    <div class="list-card">
+        <h2>Cloud Manager</h2>
+        
+        <div class="control-panel">
+            <button class="btn-action" onclick="newFolder()">+ Folder</button>
+            
+            <label class="label-upload">
+                + Upload
+                <input type="file" class="hidden-input" id="fileUpload" onchange="handleFileUpload(this)">
+            </label>
+            
+            <button class="btn-action" onclick="back()">🛈 Back</button>
+        </div>
+
+        <div id="path"></div>
+        <div id="files"></div>
+    </div>
+
+</div>
+
+<script>
+const root={
+    name:"root",
+    type:"folder",
+    children:[]
+};
+
+let current=root;
+let stack=[];
+
+async function loadFiles() {
+    try {
+        const response = await fetch("/api/files");
+
+        if (!response.ok) {
+            throw new Error("Ошибка получения файлов");
+        }
+
+        const data = await response.json();
+
+        root.children = [];
+
+        data.forEach(file => {
+            root.children.push({
+                id: file.id,
+                name: file.name,
+                type: "file",
+                date: file.date,
+                size: file.size
+            });
+        });
+
+        current = root;
+        stack = [];
+
+        render();
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function render(){
+    path.textContent="Path: /" + stack.map(x=>x.name).join("/");
+    files.innerHTML="";
+
+    current.children.forEach(item=>{
+        const div=document.createElement("div");
+        div.className="item "+item.type;
+        div.textContent=(item.type=="folder"?"📁":"📄")+" "+item.name;
+        div.draggable=true;
+
+        div.onclick=()=>{
+            if(item.type=="folder"){
+                stack.push(item);
+                current=item;
+                render();
+            } else if(item.type=="file") {
+                downloadFile(item);
+            }
+        };
+
+        div.ondragstart=e=>{
+            e.dataTransfer.setData("id",item.id);
+        };
+
+        if(item.type=="folder"){
+            div.ondragover=e=>{
+                e.preventDefault();
+                div.classList.add("over");
+            };
+
+            div.ondragleave=()=>{
+                div.classList.remove("over");
+            };
+
+            div.ondrop=e=>{
+                e.preventDefault();
+                div.classList.remove("over");
+
+                const id=e.dataTransfer.getData("id");
+                if(id==item.id)return;
+
+                move(id,item);
+                render();
+            };
+        }
+        files.appendChild(div);
+    });
+}
+
+function newFolder(){
+    let folderName = prompt("Enter folder name:", "New Folder");
+    if (folderName === null) return;
+    folderName = folderName.trim() || "New Folder";
+
+    current.children.push({
+        id:crypto.randomUUID(),
+        name: folderName,
+        type:"folder",
+        children:[]
+    });
+    render();
+}
+
+async function handleFileUpload(input) { //FILE UPLOAD
+    if (!input.files || !input.files[0]) return;
+
+    const fileData = input.files[0];
+
+    const formData = new FormData();
+    formData.append("file", fileData);
+
+    try {
+        const response = await fetch("/api/files", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Error loading file");
+        }
+
+        const uploadedFile = await response.json();
+        await loadFiles();
+
+    } catch (err) {
+        console.error(err);
+        alert("Can`t load file");
+    }
+
+    input.value = "";
+}
+
+function downloadFile(item) {
+    window.location.href = "/download/" + item.id;
+}
+
+function back(){
+    if(stack.length){
+        stack.pop();
+        current=stack.length?stack[stack.length-1]:root;
+        render();
+    }
+}
+
+function removeFrom(folder,id){
+    for(let i=0;i<folder.children.length;i++){
+        let x=folder.children[i];
+        if(x.id==id){
+            folder.children.splice(i,1);
+            return x;
+        }
+        if(x.type=="folder"){
+            let r=removeFrom(x,id);
+            if(r)return r;
+        }
+    }
+}
+
+function move(id,target){
+    let obj=removeFrom(root,id);
+    if(obj)
+        target.children.push(obj);
+}
+
+loadFiles();
+</script>
+
+</body>
+</html>
