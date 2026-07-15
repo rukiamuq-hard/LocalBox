@@ -4,7 +4,8 @@ import (
 	"database/sql"
 	"errors"
 
-	"Umbrella/internal/app/repository/SQLite/models"
+	"Umbrella/internal/app/repository/database/models"
+
 	_ "modernc.org/sqlite"
 )
 

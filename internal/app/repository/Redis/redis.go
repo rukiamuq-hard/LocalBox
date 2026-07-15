@@ -17,12 +17,18 @@ func New() *RedisDB {
 	return &RedisDB{}
 }
 
-func (myRDB *RedisDB) CreateRedis() {
+func (myRDB *RedisDB) StartRedis() error {
 	myRDB.rdb = redis.NewClient(&redis.Options{
 		Addr:     "127.0.0.1:6379",
 		Password: "",
 		DB:       0,
 	})
+
+	_, err := myRDB.rdb.Ping(context.Background()).Result()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (myRDB *RedisDB) SetKeyValue(key string, value int) error {

@@ -20,7 +20,7 @@ func New(svc Service) *MiddleWare {
 	return &MiddleWare{service: svc}
 }
 
-func (mw *MiddleWare) CheckLoggin(next echo.HandlerFunc) echo.HandlerFunc {
+func (mw *MiddleWare) CheckLogin(next echo.HandlerFunc) echo.HandlerFunc {
 
 	return func(ctx *echo.Context) error {
 		cookie, err := ctx.Cookie(CookieName)

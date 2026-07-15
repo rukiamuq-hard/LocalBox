@@ -3,8 +3,8 @@ package app
 import (
 	"Umbrella/internal/app/endpoint"             // EndPoint
 	middleWare "Umbrella/internal/app/mw"        // MiddleWare
-	rds "Umbrella/internal/app/repository/Redis" // Redis
-	"Umbrella/internal/app/repository/SQLite"    // SQLITE
+	"Umbrella/internal/app/repository/database"  // SQLITE
+	rds "Umbrella/internal/app/repository/redis" // Redis
 	"Umbrella/internal/app/service"              // Service
 	"fmt"
 
@@ -30,7 +30,10 @@ func New() (*App, error) {
 	}
 
 	a.rdb = rds.New() // REDIS START
-	a.rdb.CreateRedis()
+	err = a.rdb.StartRedis()
+	if err != nil {
+		return nil, err
+	}
 
 	a.servc = service.New(a.db, a.rdb)
 	a.ePoint = endpoint.New(a.servc)
@@ -44,10 +47,10 @@ func New() (*App, error) {
 	//upper is can be watching without login
 
 	//down is with cookie secure
-	a.echo.GET("/dashboard.html", func(ctx *echo.Context) error { return ctx.File("website/dashboard.html") }, a.midleWR.CheckLoggin)
-	a.echo.POST("/api/files", a.ePoint.UploadFile, a.midleWR.CheckLoggin)
-	a.echo.GET("/api/files", a.ePoint.GetFiles, a.midleWR.CheckLoggin)
-	a.echo.GET("/download/:id", a.ePoint.DownloadFile, a.midleWR.CheckLoggin)
+	a.echo.GET("/dashboard.html", a.ePoint.LoadDashboard, a.midleWR.CheckLogin)
+	a.echo.POST("/api/files", a.ePoint.UploadFile, a.midleWR.CheckLogin)
+	a.echo.GET("/api/files", a.ePoint.GetFiles, a.midleWR.CheckLogin)
+	a.echo.GET("/download/:id", a.ePoint.DownloadFile, a.midleWR.CheckLogin)
 
 	return a, nil
 }
@@ -66,5 +69,4 @@ func (app *App) Close() {
 		app.db.CloseDB()
 		app.rdb.Close()
 	}
-
 }
