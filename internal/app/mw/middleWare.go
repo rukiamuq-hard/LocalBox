@@ -1,6 +1,7 @@
 package middleWare
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
@@ -17,6 +18,7 @@ type MiddleWare struct {
 }
 
 func New(svc Service) *MiddleWare {
+	fmt.Println("[MIDDLEWARE]: Initialized")
 	return &MiddleWare{service: svc}
 }
 

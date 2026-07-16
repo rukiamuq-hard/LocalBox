@@ -56,7 +56,7 @@ func New() (*App, error) {
 }
 
 func (app *App) Run() error {
-	fmt.Println("Server running")
+	fmt.Println("[ECHO]: Initialized")
 	if err := app.echo.Start(":8080"); err != nil {
 		return fmt.Errorf("Error to start: %w", err)
 	}

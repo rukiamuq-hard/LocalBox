@@ -24,6 +24,7 @@ type EndPoint struct {
 }
 
 func New(svc Service) *EndPoint {
+	fmt.Println("[ENDPOINT]: Initialized")
 	return &EndPoint{
 		s: svc,
 	}

@@ -2,7 +2,7 @@ package service
 
 import (
 	"Umbrella/internal/app/repository/database/models"
-
+	"fmt"
 	"github.com/google/uuid"
 )
 
@@ -26,6 +26,7 @@ type Service struct {
 }
 
 func New(uDB UserDB, rDB RedisDB) *Service {
+	fmt.Println("[SERVICE]: Initialized")
 	return &Service{db: uDB, rdb: rDB}
 }
 

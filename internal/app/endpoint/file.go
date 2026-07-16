@@ -6,6 +6,8 @@ import (
 	"github.com/labstack/echo/v5"
 )
 
+const FileSizeLimit = 800000000
+
 func (e *EndPoint) GetFiles(ctx *echo.Context) error {
 	files, err := e.s.GetFilesFromDB()
 	if err != nil {
@@ -21,6 +23,9 @@ func (e *EndPoint) UploadFile(ctx *echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "file not found"})
 	}
 
+	if file.Size > FileSizeLimit {
+		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "too big file size"})
+	}
 	srcFile, err := file.Open()
 	if err != nil {
 		return err
