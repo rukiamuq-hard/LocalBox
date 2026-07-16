@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -18,8 +19,12 @@ func New() *RedisDB {
 }
 
 func (myRDB *RedisDB) StartRedis() error {
+	addr := os.Getenv("REDIS_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:6379"
+	}
 	myRDB.rdb = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
+		Addr:     addr,
 		Password: "",
 		DB:       0,
 	})

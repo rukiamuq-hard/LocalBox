@@ -1,0 +1,22 @@
+services:
+  app:
+    build:  
+      context: ../..
+      dockerfile: deployment/docker/Dockerfile
+    ports:
+    - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis:6379
+    volumes:
+      - ./data/Users.db:/app/Users.db
+      - ./data/uploads:/app/uploads
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
