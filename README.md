@@ -18,6 +18,8 @@ Built in Go with a vanilla JS frontend. Fast, simple, no unnecessary bloat.
 cmd/
   main.go             application entry point
 
+deployment/docker/ Docker deployment
+
 internal/app/
   app.go              initialization, route configuration
   endpoint/           HTTP handlers (login, register, files)
@@ -49,14 +51,12 @@ website/
 git clone https://github.com/rukiamuq-hard/LocalBox.git
 cd LocalBox
 
-# 2. Install dependencies (already in go.mod)
-go mod download
+# 2. start docker
+make up
 
-# 3. Run
-go run cmd/main.go
-
-# 4. Open in browser
+# 3. Open in browser
 # http://localhost:8080
+
 ```
 
 That's it. Sign up, upload files, use it.
@@ -68,6 +68,7 @@ That's it. Sign up, upload files, use it.
 - **SQLite** (modernc.org) — user and file database
 - **Redis** (go-redis) — session storage
 - **HTML + CSS + Vanilla JS** — interface (no frameworks)
+- **Docker** - for deployment, no interface
 
 ## Features
 
@@ -79,9 +80,3 @@ That's it. Sign up, upload files, use it.
 | File download | ✓ |
 | Drag-and-drop move | ✓ |
 | Multi-user support | ✓ |
-
-## Questions to Consider
-
-- How does access control work between users?
-- Are there file size limits?
-- How to configure host and port on startup?
