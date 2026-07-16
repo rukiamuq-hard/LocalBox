@@ -47,10 +47,7 @@ func (e *EndPoint) Login(ctx *echo.Context) error {
 		return ctx.Redirect(http.StatusSeeOther, "/")
 	}
 
-	cookie, cookieID, err := e.setCookie(login)
-	if err != nil {
-		return ctx.Redirect(http.StatusSeeOther, "/")
-	}
+	cookie := e.setCookie(login)
 	id, err := e.s.GetIdFromDB(login)
 	if err != nil {
 		return ctx.Redirect(http.StatusSeeOther, "/")
@@ -61,7 +58,6 @@ func (e *EndPoint) Login(ctx *echo.Context) error {
 	}
 
 	ctx.SetCookie(cookie)
-	ctx.SetCookie(cookieID)
 
 	return ctx.Redirect(http.StatusSeeOther, "/dashboard.html")
 }

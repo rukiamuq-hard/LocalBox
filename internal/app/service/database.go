@@ -27,7 +27,7 @@ func (s *Service) StoreFileToDB(r io.Reader, fileName string, storeFileName stri
 	if _, err = io.Copy(ServCreateFile, r); err != nil {
 		return err
 	}
-	fmt.Println("db")
+
 	TimeIs := time.Now().String()
 	err = s.db.StoreFile(fileName, storeFileName+Ext, TimeIs, size, uploader_id)
 	if err != nil {

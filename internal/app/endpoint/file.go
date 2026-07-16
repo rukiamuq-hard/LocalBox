@@ -26,12 +26,8 @@ func (e *EndPoint) UploadFile(ctx *echo.Context) error {
 		return err
 	}
 	defer srcFile.Close()
-	cookie, err := ctx.Cookie("account-id")
-	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "can`t get cookie"})
-	}
-
-	err = e.s.StoreFileToDB(srcFile, file.Filename, e.s.MakeUUID(), file.Size, cookie.Value)
+	id := ctx.Get("userID").(string)
+	err = e.s.StoreFileToDB(srcFile, file.Filename, e.s.MakeUUID(), file.Size, id)
 	if err != nil {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "file not stored"})
 	}

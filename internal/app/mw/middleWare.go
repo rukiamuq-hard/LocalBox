@@ -27,10 +27,13 @@ func (mw *MiddleWare) CheckLogin(next echo.HandlerFunc) echo.HandlerFunc {
 		if err != nil {
 			return ctx.Redirect(http.StatusSeeOther, "/")
 		}
-		_, err = mw.service.RedisGetValue(cookie.Value)
+
+		id, err := mw.service.RedisGetValue(cookie.Value)
 		if err != nil {
 			return ctx.Redirect(http.StatusSeeOther, "/")
 		}
+
+		ctx.Set("userID", id)
 		return next(ctx)
 	}
 }
