@@ -51,10 +51,14 @@ website/
 git clone https://github.com/rukiamuq-hard/LocalBox.git
 cd LocalBox
 
-# 2. start docker
+# 2. Create File of DB
+New-Item -ItemType File -Path deployment/docker/data/Users.db -Force - Windows
+touch deployment/docker/data/Users.db - Linux
+
+# 3. Start docker
 make up
 
-# 3. Open in browser
+# 4. Open in browser
 # http://localhost:8080
 
 ```
