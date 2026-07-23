@@ -1,4 +1,4 @@
-![Cloud Storage](/.svg)
+![Cloud Storage](LocalBox.svg)
 
 ![Status](https://img.shields.io/badge/status-in%20development-blue)
 ![Language](https://img.shields.io/badge/language-Go-00ADD8?logo=go)
