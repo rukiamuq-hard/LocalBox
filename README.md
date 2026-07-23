@@ -1,6 +1,6 @@
 <h1 align=center>
   
-![Cloud Storage](LocalBox.svg)
+![Cloud Storage](docs/LocalBox.svg)
 
 ![Status](https://img.shields.io/badge/status-in%20development-blue)
 </h1>

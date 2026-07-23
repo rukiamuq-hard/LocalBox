@@ -1,0 +1,96 @@
+<svg width="1280" height="320" viewBox="0 0 1280 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="55%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0a0e14"/>
+    </linearGradient>
+
+    <linearGradient id="boxTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="boxLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="boxRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1e40af"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+    </radialGradient>
+
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M 34 0 L 0 0 0 34" fill="none" stroke="#1f2937" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="320" fill="url(#bg)"/>
+  <rect width="1280" height="320" fill="url(#grid)" opacity="0.5"/>
+  <circle cx="1040" cy="150" r="260" fill="url(#glow)"/>
+
+  <!-- subtle circuit / connection lines suggesting a home network -->
+  <g stroke="#22314d" stroke-width="1.5" fill="none" opacity="0.8">
+    <path d="M 60 260 L 60 220 L 140 220"/>
+    <path d="M 140 220 C 170 220 170 180 200 180"/>
+    <circle cx="140" cy="220" r="3.5" fill="#3b82f6"/>
+    <circle cx="60" cy="260" r="3.5" fill="#3b82f6"/>
+    <path d="M 1180 60 L 1180 100 L 1120 100"/>
+    <circle cx="1180" cy="60" r="3.5" fill="#3b82f6"/>
+  </g>
+
+  <!-- isometric box / cloud-storage icon -->
+  <g transform="translate(148,160)">
+    <!-- top face -->
+    <path d="M -62 -18 L 0 -46 L 62 -18 L 0 10 Z" fill="url(#boxTop)"/>
+    <!-- left face -->
+    <path d="M -62 -18 L 0 10 L 0 66 L -62 38 Z" fill="url(#boxLeft)"/>
+    <!-- right face -->
+    <path d="M 62 -18 L 0 10 L 0 66 L 62 38 Z" fill="url(#boxRight)"/>
+    <!-- seam highlight -->
+    <path d="M 0 10 L 0 66" stroke="#0a0e14" stroke-width="1.5" opacity="0.5"/>
+    <!-- open lid flaps -->
+    <path d="M -62 -18 L -30 -44 L 0 -30 L -32 -4 Z" fill="#60a5fa" opacity="0.9"/>
+    <path d="M 62 -18 L 30 -44 L 0 -30 L 32 -4 Z" fill="#93c5fd" opacity="0.85"/>
+    <!-- small upward arrow = sync/upload -->
+    <g transform="translate(0,-58)">
+      <path d="M 0 22 L 0 -4 M -9 5 L 0 -6 L 9 5" stroke="#e5edff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+  </g>
+
+  <!-- house/local outline behind box, subtle -->
+  <path d="M 148 68 L 96 108 L 96 120 L 200 120 L 200 108 Z" fill="none" stroke="#3b82f6" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- title block -->
+  <g font-family="'Segoe UI', -apple-system, Helvetica, Arial, sans-serif">
+    <text x="290" y="150" font-size="58" font-weight="700" fill="#f3f6ff" letter-spacing="0.5">Local<tspan fill="#4f8cff">Box</tspan></text>
+    <text x="292" y="184" font-size="19" fill="#8ea3c7" font-weight="400">Cloud on your own machine — file storage, fully under your control</text>
+
+    <!-- tag pills -->
+    <g font-size="14" font-weight="600" fill="#c8d6ee">
+      <rect x="292" y="204" width="52" height="28" rx="6" fill="#141b2b" stroke="#233251"/>
+      <text x="318" y="222" text-anchor="middle" fill="#7dd3fc">Go</text>
+
+      <rect x="352" y="204" width="72" height="28" rx="6" fill="#141b2b" stroke="#233251"/>
+      <text x="388" y="222" text-anchor="middle">Echo</text>
+
+      <rect x="432" y="204" width="82" height="28" rx="6" fill="#141b2b" stroke="#233251"/>
+      <text x="473" y="222" text-anchor="middle" fill="#a7f3d0">SQLite</text>
+
+      <rect x="522" y="204" width="82" height="28" rx="6" fill="#141b2b" stroke="#233251"/>
+      <text x="563" y="222" text-anchor="middle" fill="#fca5a5">Redis</text>
+
+      <rect x="612" y="204" width="120" height="28" rx="6" fill="#141b2b" stroke="#233251"/>
+      <text x="672" y="222" text-anchor="middle" fill="#fde68a">Vanilla JS</text>
+    </g>
+  </g>
+
+  <!-- corner accent -->
+  <path d="M 0 320 L 0 300 L 20 320 Z" fill="#2563eb" opacity="0.6"/>
+  <rect x="0" y="0" width="1280" height="4" fill="#2563eb"/>
+</svg>
