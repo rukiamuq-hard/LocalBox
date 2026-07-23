@@ -1,6 +1,4 @@
-# LocalBox
-
-> Cloud on your own machine. File storage with a web interface, fully under your control.
+![Cloud Storage](/.svg)
 
 ![Status](https://img.shields.io/badge/status-in%20development-blue)
 ![Language](https://img.shields.io/badge/language-Go-00ADD8?logo=go)
