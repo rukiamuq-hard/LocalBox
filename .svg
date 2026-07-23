@@ -1,0 +1,80 @@
+<svg width="845" height="296" viewBox="0 0 845 296" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Background -->
+    <rect width="845" height="296" fill="#1A1B26"/>
+
+    <!-- Decorative circles -->
+    <circle cx="725" cy="60" r="95" fill="#7AA2F7" fill-opacity="0.06"/>
+    <circle cx="785" cy="245" r="120" fill="#BB9AF7" fill-opacity="0.05"/>
+    <circle cx="650" cy="205" r="45" fill="#73DACA" fill-opacity="0.08"/>
+
+    <!-- Monitor -->
+    <rect x="48" y="58" width="190" height="122" rx="10" fill="#24283B" stroke="#7AA2F7" stroke-width="3"/>
+    <rect x="60" y="70" width="166" height="98" rx="6" fill="#1F2335"/>
+
+    <!-- Folder -->
+    <path d="M88 105H145L155 94H205C212 94 217 99 217 106V145C217 152 212 157 205 157H81C74 157 69 152 69 145V116C69 109 74 104 81 104H88V105Z"
+          fill="#7AA2F7"/>
+
+    <!-- Arrow -->
+    <path d="M132 120L162 120" stroke="#73DACA" stroke-width="4" stroke-linecap="round"/>
+    <path d="M153 112L162 120L153 128" stroke="#73DACA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Monitor stand -->
+    <rect x="128" y="182" width="30" height="18" fill="#565F89"/>
+    <rect x="103" y="198" width="80" height="8" rx="4" fill="#565F89"/>
+
+    <!-- Title -->
+    <text
+        x="290"
+        y="95"
+        fill="#C0CAF5"
+        font-family="Segoe UI, Inter, sans-serif"
+        font-size="36"
+        font-weight="700">
+        LocalBox
+    </text>
+
+    <!-- Description -->
+    <text
+        x="290"
+        y="135"
+        fill="#A9B1D6"
+        font-family="Segoe UI, Inter, sans-serif"
+        font-size="18">
+        Cloud on your own machine.
+    </text>
+
+    <text
+        x="290"
+        y="160"
+        fill="#A9B1D6"
+        font-family="Segoe UI, Inter, sans-serif"
+        font-size="18">
+        Local file storage with a lightweight web interface.
+    </text>
+
+    <!-- Stack -->
+    <text
+        x="290"
+        y="205"
+        fill="#73DACA"
+        font-family="Consolas, monospace"
+        font-size="16">
+        Go • Echo • SQLite • Redis • Vanilla JS
+    </text>
+
+    <!-- Link -->
+    <text
+        x="290"
+        y="235"
+        fill="#7DCFFF"
+        font-family="Consolas, monospace"
+        font-size="15">
+        github.com/rukiamuq-hard/LocalBox
+    </text>
+
+    <!-- Bottom Accent -->
+    <rect y="289" width="845" height="7" fill="#7AA2F7"/>
+
+</svg>
