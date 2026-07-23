@@ -1,8 +1,9 @@
+<h1 align=center>
+  
 ![Cloud Storage](LocalBox.svg)
 
 ![Status](https://img.shields.io/badge/status-in%20development-blue)
-![Language](https://img.shields.io/badge/language-Go-00ADD8?logo=go)
-![Storage](https://img.shields.io/badge/storage-SQLite%20%2B%20Redis-success)
+</h1>
 
 ## The Idea
 
